@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       scrollBehavior: const ScrollBehaviorModified(),
       theme: AppColors.lightTheme,
       darkTheme: AppColors.darkTheme,
+      themeMode: ThemeMode.light,
       home: const App(),
     );
   }

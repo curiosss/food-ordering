@@ -21,4 +21,6 @@ class Dimens {
   static double bottomBarTotalH = 80 + mediabottomPadding;
   static double bottomBarH = 56 + mediabottomPadding;
   static const double bottomBarTopPad = 24;
+
+  static double minTabletWidth = 480;
 }

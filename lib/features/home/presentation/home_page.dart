@@ -17,7 +17,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     Get.put<HomePageCtrl>(homePageCtrl);
-
     super.initState();
   }
 
@@ -29,6 +28,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // return Row(
+    //   children: [
+    //     const HomeDrawer(),
+    //     Expanded(
+    //       child: Scaffold(
+    //         appBar: AppBar(
+    //           title: const Text("Homies"),
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // );
+
     return Scaffold(
       drawer: const HomeDrawer(),
       appBar: AppBar(
@@ -40,29 +52,41 @@ class _HomePageState extends State<HomePage> {
             child: CircularProgressIndicator.adaptive(),
           );
         }
-        return SingleChildScrollView(
+
+        return GridView.builder(
           padding: const EdgeInsets.symmetric(
-            vertical: Dimens.hMargin,
             horizontal: Dimens.gMargin,
+            vertical: Dimens.hMargin,
           ),
-          child: Column(
-              children: homePageCtrl.departments.map((e) {
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 400,
+            // mainAxisExtent: 240,
+            childAspectRatio: 1.4,
+            crossAxisSpacing: Dimens.sMargin,
+            mainAxisSpacing: Dimens.sMargin,
+          ),
+          itemCount: homePageCtrl.departments.length,
+          itemBuilder: (context, index) {
+            var e = homePageCtrl.departments[index];
             return Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Dimens.gBorder),
               ),
-              margin: const EdgeInsets.symmetric(vertical: Dimens.hMargin),
+              // margin: const EdgeInsets.symmetric(vertical: Dimens.hMargin),
+              margin: EdgeInsets.zero,
               child: Column(
                 children: [
-                  AspectRatio(
-                    aspectRatio: 2.0,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(Dimens.gBorder),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: e.imageUrl,
-                        fit: BoxFit.cover,
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(Dimens.gBorder),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: e.imageUrl,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -95,17 +119,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             );
-            // return Container(
-            //   margin: const EdgeInsets.symmetric(vertical: 6),
-            //   color: Colors.green,
-            //   child: Text(
-            //     e.name,
-            //     style: const TextStyle(
-            //       fontSize: 18,
-            //     ),
-            //   ),
-            // );
-          }).toList()),
+          },
         );
       }),
     );

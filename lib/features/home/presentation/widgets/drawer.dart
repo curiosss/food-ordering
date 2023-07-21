@@ -4,7 +4,8 @@ import 'package:rokus/core/utils/app_colors.dart';
 import 'package:rokus/core/utils/dimens.dart';
 import 'package:rokus/core/utils/text_styles.dart';
 import 'package:rokus/features/auth/presentation/controller/auth_controller.dart';
-import 'package:rokus/features/home/presentation/widgets/role_selector_dialog.dart';
+import 'package:rokus/features/auth/presentation/widgets/dropdown_btn.dart';
+import 'package:rokus/features/auth/presentation/widgets/role_selector_dialog.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
@@ -29,44 +30,31 @@ class HomeDrawer extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: Dimens.sMargin),
-              Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimens.sBorder),
-                  border: Border.all(
-                    width: 1,
-                    color: AppColors.darkGrey,
-                  ),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(Dimens.sBorder),
+              if (authController.selectedRole != null)
+                DropdownBtn(
+                  height: 40,
+                  roleName: "User",
                   onTap: () {
                     showDialog(
                         context: context,
                         builder: (context) => RoleSelectorDialog(
                               authController: authController,
+                              shouldNavigateToAuth: true,
+                              role: authController.selectedRole!.value,
                             ));
                   },
-                  child: const Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: Dimens.hMargin),
-                          child: Text(
-                            "User",
-                            style: TextStyles.style17w400,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.darkGrey,
-                      ),
-                    ],
+                )
+              else
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Dimens.sBorder),
+                    border: Border.all(
+                      width: 1,
+                      color: AppColors.darkGrey,
+                    ),
                   ),
                 ),
-              ),
               const SizedBox(height: Dimens.hMargin),
               buildDrawerItem(
                 title: "Profile",

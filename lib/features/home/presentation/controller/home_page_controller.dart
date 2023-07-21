@@ -7,7 +7,6 @@ class HomePageCtrl {
   DepartmentsRepoImpl departmentsRepo = DepartmentsRepoImpl();
 
   RxBool isloading = false.obs;
-  bool isConnected = true;
 
   List<Department> departments = [];
 

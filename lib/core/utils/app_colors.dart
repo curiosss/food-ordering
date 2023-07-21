@@ -44,21 +44,21 @@ class AppColors {
   static Color blackWhite = Colors.white;
 
   static ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light,
     useMaterial3: false,
-    primaryColor: Colors.black,
     scaffoldBackgroundColor: backgroundLight,
     fontFamily: 'Roboto',
     unselectedWidgetColor: Colors.black54,
     cardColor: Colors.white,
     colorScheme: const ColorScheme.light(
-      onPrimary: Colors.black,
+      primary: Colors.black,
+      onPrimary: Colors.white,
       secondary: Colors.black,
     ),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       scrolledUnderElevation: 5,
       backgroundColor: backgroundLight,
+      foregroundColor: Colors.black,
       centerTitle: false,
       titleSpacing: 0,
     ),
@@ -68,10 +68,6 @@ class AppColors {
           borderRadius: BorderRadius.circular(Dimens.sBorder),
         ),
       ),
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      filled: true,
-      fillColor: textfieldBackLight,
     ),
   );
   static ThemeData darkTheme = ThemeData(

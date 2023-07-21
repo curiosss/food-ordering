@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
 import 'package:rokus/config/constants/constants.dart';
+import 'package:rokus/core/snackbar/show_message.dart';
 // import 'package:get_it/get_it.dart';
 
 // final sl = GetIt.instance;
@@ -15,6 +15,9 @@ class NetworkService {
   }
 
   initHeaders() {
+    http.options.headers = {
+      "locale": "tk",
+    };
     http.options.baseUrl = baseUrl;
   }
 
@@ -23,10 +26,9 @@ class NetworkService {
     if (result != ConnectivityResult.none) {
       return true;
     }
-    Get.snackbar(
-      'No internet',
-      'Please check connection, and try again!',
-      snackPosition: SnackPosition.BOTTOM,
+    showSnackMessage(
+      "No internet",
+      messageType: MessageType.error,
     );
     return false;
   }

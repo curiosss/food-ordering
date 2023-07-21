@@ -5,6 +5,8 @@ import 'package:rokus/core/network/network_service.dart';
 import 'package:rokus/features/auth/presentation/controller/auth_controller.dart';
 import 'package:rokus/features/home/presentation/home_page.dart';
 
+import 'core/snackbar/home_context.dart';
+
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -37,6 +39,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    homeContext = context;
     if (isloading) {
       return const Scaffold(
         body: Center(
