@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rokus/core/utils/app_colors.dart';
+import 'package:rokus/core/form/validators.dart';
 import 'package:rokus/core/utils/dimens.dart';
-import 'package:rokus/core/utils/text_styles.dart';
-import 'package:rokus/core/widgets/k_textfield.dart';
+import 'package:rokus/core/widgets/form/k_password_field.dart';
+import 'package:rokus/core/widgets/form/k_phone_field.dart';
+import 'package:rokus/core/widgets/form/k_textfield.dart';
+import 'package:rokus/features/auth/domain/entities/role.dart';
 import 'package:rokus/features/auth/presentation/controller/auth_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
-  final int? roleId;
+  final Role role;
   const SignUpScreen({
     super.key,
-    this.roleId,
+    required this.role,
   });
 
   @override
@@ -18,158 +20,118 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  late Role role;
   AuthController authController = Get.find<AuthController>();
   TextEditingController phoneCtrl = TextEditingController();
+  TextEditingController nameCtrl = TextEditingController();
+  TextEditingController surnameCtrl = TextEditingController();
+  TextEditingController passwordCtrl = TextEditingController();
+  TextEditingController passwordRptCtrl = TextEditingController();
 
   bool isSubmitted = false;
+  var formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    role = widget.role;
+    super.initState();
+  }
 
   @override
   void dispose() {
-    print('disposing sign up');
     phoneCtrl.dispose();
+    nameCtrl.dispose();
+    surnameCtrl.dispose();
+    passwordCtrl.dispose();
+    passwordRptCtrl.dispose();
     super.dispose();
+  }
+
+  post() async {
+    if (!isSubmitted) {
+      setState(() {
+        isSubmitted = true;
+      });
+    }
+    if (formKey.currentState?.validate() ?? false) {}
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          // title: const Text(
-          //   "Login",
-          // ),
+        title: const Text("Sign up"),
+      ),
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: Dimens.minTabletWidth),
+          child: Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(Dimens.gMargin),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // const Text(
+                  //   "Sign up",
+                  //   textAlign: TextAlign.center,
+                  //   style: TextStyles.style28w500,
+                  // ),
+                  // const SizedBox(height: Dimens.gMargin),
+                  KTelPhoneField(
+                    textEditingController: phoneCtrl,
+                    isSubmitted: isSubmitted,
+                  ),
+                  const SizedBox(height: Dimens.gMargin),
+                  KTextField(
+                    controller: nameCtrl,
+                    isSubmitted: isSubmitted,
+                    prefixIcon: Icons.account_circle_outlined,
+                    labelText: "Name",
+                    validator: validateMin3,
+                  ),
+                  const SizedBox(height: Dimens.gMargin),
+                  KTextField(
+                    controller: surnameCtrl,
+                    isSubmitted: isSubmitted,
+                    prefixIcon: Icons.account_circle_outlined,
+                    labelText: "Surname",
+                    validator: validateMin3,
+                  ),
+                  const SizedBox(height: Dimens.gMargin),
+                  KPasswordField(
+                    textEditingController: passwordCtrl,
+                    isSubmitted: isSubmitted,
+                    validator: validateMin8,
+                  ),
+                  const SizedBox(height: Dimens.gMargin),
+                  KPasswordField(
+                    textEditingController: passwordRptCtrl,
+                    isSubmitted: isSubmitted,
+                    labelText: "Repeat password",
+                    validator: (p0) {
+                      String? res = validateMin8(p0);
+                      if (res != null) {
+                        return res;
+                      } else if (passwordCtrl.text != passwordRptCtrl.text) {
+                        return "Passwords didn't match";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: Dimens.gMargin),
+                  SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: post,
+                      child: const Text("Sign up"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(Dimens.gMargin),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              "Sign up",
-              textAlign: TextAlign.center,
-              style: TextStyles.style28w500,
-            ),
-            const SizedBox(height: 50),
-            Container(
-              height: 48,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimens.sBorder),
-                border: Border.all(
-                  width: 1,
-                  color: AppColors.darkGrey,
-                ),
-              ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(Dimens.sBorder),
-                onTap: () {
-                  // showDialog(
-                  //     context: context,
-                  //     builder: (context) => RoleSelectorDialog(
-                  //           authController: authController,
-                  //           shouldNavigateToAuth: false,
-                  //         ));
-                },
-                child: const Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: Dimens.hMargin),
-                        child: Text(
-                          "User",
-                          style: TextStyles.style17w400,
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.darkGrey,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: Dimens.gMargin),
-            KTextField(
-              controller: phoneCtrl,
-              isSubmitted: isSubmitted,
-              keyboardType: TextInputType.number,
-              prefixIcon: Icons.phone_outlined,
-              prefixText: "+993",
-              hintText: "6XXXXXXX",
-              maxLength: 8,
-              labelText: "Phone number",
-            ),
-            const SizedBox(height: Dimens.gMargin),
-            KTextField(
-              controller: phoneCtrl,
-              isSubmitted: isSubmitted,
-              prefixIcon: Icons.lock,
-              labelText: "Password",
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Text(
-                  "Forgot password?  ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Reset",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: Dimens.gMargin),
-            SizedBox(
-              height: 48,
-              child: ElevatedButton(
-                onPressed: () {},
-                // style: ElevatedButton.styleFrom(
-                //   backgroundColor: Colors.black,
-                //   foregroundColor: Colors.white,
-                // ),
-                child: const Text("Sign up"),
-              ),
-            ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     const Text(
-            //       "Already have account?  ",
-            //       style: TextStyle(
-            //         fontSize: 16,
-            //         fontWeight: FontWeight.w400,
-            //         color: Colors.black,
-            //       ),
-            //     ),
-            //     TextButton(
-            //       onPressed: () {
-            //         Navigator.pop(context);
-            //       },
-            //       child: const Text(
-            //         "Login",
-            //         style: TextStyle(
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.w500,
-            //           color: Colors.black,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-          ],
         ),
       ),
     );

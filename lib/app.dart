@@ -40,6 +40,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     homeContext = context;
+    print(homeContext.hashCode);
     if (isloading) {
       return const Scaffold(
         body: Center(

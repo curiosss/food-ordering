@@ -65,6 +65,7 @@ class KTextField extends StatelessWidget {
         FocusScope.of(context).unfocus();
       },
       onChanged: onChange,
+
       // onChanged: prefixIcon != null
       //     ? (val) {
       //         if (onChange != null) {
@@ -81,13 +82,14 @@ class KTextField extends StatelessWidget {
       //         }
       //       }
       //     : onChange,
-      // validator: validator ??
-      //     (value) {
-      //       if (value != null && value.isNotEmpty) {
-      //         return null;
-      //       }
-      //       return AppLocalizations.of(context).requiredToFill;
-      //     },
+      validator: validator ??
+          (value) {
+            if (value != null && value.isNotEmpty) {
+              return null;
+            }
+            // return AppLocalizations.of(context).requiredToFill;
+            return "Required to fill";
+          },
       style: TextStyle(
         color: Theme.of(context).colorScheme.secondary,
         fontSize: 16,
