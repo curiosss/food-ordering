@@ -57,10 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
   post() async {
     if (formKey.currentState?.validate() ?? false) {
       await authController.login(
-        role: role,
         phone: phoneCtrl.text,
         password: passwordCtrl.text,
-        key: accaountKeyCtrl.text,
       );
     }
   }

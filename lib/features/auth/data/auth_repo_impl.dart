@@ -2,13 +2,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:rokus/core/network/data_state.dart';
+import 'package:rokus/core/error/network_error.dart';
 import 'package:rokus/core/network/network_service.dart';
 import 'package:rokus/core/snackbar/show_message.dart';
 import 'package:rokus/features/auth/domain/entities/user.dart';
 import 'package:rokus/features/auth/domain/repositories/auth_repo.dart';
-
-import '../domain/entities/role.dart';
 
 class AuthRepoImpl implements AuthRepo {
   late NetworkService networkService;
@@ -18,15 +16,13 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<(User?, ResponseStatus)> login({
-    required Role role,
+  Future<User?> login({
     required String phone,
     required String password,
-    String? key,
   }) async {
     try {
       if (!await networkService.isConnected()) {
-        return (null, ResponseStatus.noInternet);
+        return null;
       }
       var response =
           await networkService.http.post('/public/user/login', data: {
@@ -37,7 +33,7 @@ class AuthRepoImpl implements AuthRepo {
       if (response.statusCode == 200 && response.data["data"] != null) {
         User user = User.fromMap(response.data['data']);
         // print(user);
-        return (user, ResponseStatus.success);
+        return user;
       }
       Get.snackbar(
         'No internet',
@@ -52,12 +48,33 @@ class AuthRepoImpl implements AuthRepo {
       //   snackPosition: SnackPosition.BOTTOM,
       // );
       showSnackMessage(
-        e.response?.data.toString() ?? "custom error",
+        e.response?.data["message"] ?? "custom error",
         messageType: MessageType.error,
       );
 
-      return (null, ResponseStatus.error);
+      return null;
     }
-    return (null, ResponseStatus.error);
+    return null;
+  }
+
+  @override
+  Future<User?> signUp({required Map<String, dynamic> data}) async {
+    try {
+      if (!await networkService.isConnected()) {
+        return (null);
+      }
+      var response =
+          await networkService.http.post('/public/user/sign-up', data: data);
+
+      if (response.statusCode == 200 && response.data["data"] != null) {
+        User user = User.fromMap(response.data['data']);
+        return user;
+      }
+    } on DioException catch (e) {
+      log(e.toString());
+      showErrorMessageFromRes(e.response);
+      return null;
+    }
+    return null;
   }
 }

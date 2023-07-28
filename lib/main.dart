@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:rokus/app.dart';
 import 'package:rokus/core/utils/app_colors.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations(
@@ -19,6 +19,7 @@ void main() {
       statusBarColor: Colors.transparent,
     ),
   );
+
   runApp(const MyApp());
 }
 

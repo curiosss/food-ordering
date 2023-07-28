@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
+import 'package:rokus/core/settings/app_settings.dart';
 import 'package:rokus/features/auth/data/auth_repo_impl.dart';
 import 'package:rokus/features/auth/domain/entities/role.dart';
+import 'package:rokus/features/auth/domain/entities/user.dart';
 
 class AuthController {
   AuthController() {
@@ -9,7 +11,13 @@ class AuthController {
 
   init() {
     selectedRole = roles.first.obs;
+    String? userStr = AppSettings.box?.get('user');
+    if (userStr != null) {
+      user.value = User.fromJson(userStr);
+    }
   }
+
+  Rx<User?> user = Rx(null);
 
   AuthRepoImpl authRepoImpl = AuthRepoImpl();
 
@@ -33,15 +41,26 @@ class AuthController {
   Rx<Role>? selectedRole;
 
   login({
-    required Role role,
     required String phone,
     required String password,
-    String? key,
   }) async {
-    await authRepoImpl.login(
-      role: role,
+    User? user = await authRepoImpl.login(
       phone: phone,
       password: password,
     );
+    if (user != null) {
+      saveUser(user);
+    }
+  }
+
+  signUp({
+    required Map<String, dynamic> data,
+  }) async {
+    await authRepoImpl.signUp(data: data);
+  }
+
+  saveUser(User userMd) {
+    user.value = userMd;
+    AppSettings.box?.put('user', userMd.toJson());
   }
 }

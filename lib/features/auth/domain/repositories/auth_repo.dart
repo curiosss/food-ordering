@@ -1,13 +1,10 @@
-import 'package:rokus/core/network/data_state.dart';
 import 'package:rokus/features/auth/domain/entities/user.dart';
 
-import '../entities/role.dart';
-
 abstract class AuthRepo {
-  Future<(User?, ResponseStatus)> login({
-    required Role role,
+  Future<User?> login({
     required String phone,
     required String password,
-    String? key,
   });
+
+  Future<User?> signUp({required Map<String, dynamic> data});
 }

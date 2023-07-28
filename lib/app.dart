@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/utils.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rokus/core/network/network_service.dart';
+import 'package:rokus/core/settings/app_settings.dart';
 import 'package:rokus/features/auth/presentation/controller/auth_controller.dart';
 import 'package:rokus/features/home/presentation/home_page.dart';
 
@@ -24,17 +30,29 @@ class _AppState extends State<App> {
   }
 
   initAll() async {
-    NetworkService networkService = NetworkService();
-    await networkService.initHeaders();
-    Get.put(networkService);
+    try {
+      Directory dir = await getApplicationDocumentsDirectory();
+      Hive.init(dir.path);
 
-    Get.put(AuthController());
+      AppSettings appSettings = AppSettings();
+      await appSettings.init();
 
-    await Future.delayed(const Duration(seconds: 2));
+      NetworkService networkService = NetworkService();
+      await networkService.init();
+      Get.put(networkService);
 
-    setState(() {
-      isloading = false;
-    });
+      Get.put(AuthController());
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      setState(() {
+        isloading = false;
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   @override

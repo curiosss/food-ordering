@@ -53,7 +53,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
         isSubmitted = true;
       });
     }
-    if (formKey.currentState?.validate() ?? false) {}
+    if (formKey.currentState?.validate() ?? false) {
+      await authController.signUp(data: {
+        "name": nameCtrl.text,
+        "surname": surnameCtrl.text,
+        "phone": "993${phoneCtrl.text}",
+        // "email": "",
+        "password": passwordCtrl.text,
+      });
+    }
   }
 
   @override

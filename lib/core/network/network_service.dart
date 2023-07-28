@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:rokus/config/constants/constants.dart';
+import 'package:rokus/core/settings/app_settings.dart';
 import 'package:rokus/core/snackbar/show_message.dart';
 // import 'package:get_it/get_it.dart';
 
@@ -11,12 +12,14 @@ class NetworkService {
   Dio http = Dio();
 
   NetworkService() {
-    initHeaders();
+    initHeaders(locale: AppSettings.locale);
   }
 
-  initHeaders() {
+  init() async {}
+
+  initHeaders({String locale = "tk"}) {
     http.options.headers = {
-      "locale": "tk",
+      "locale": locale,
     };
     http.options.baseUrl = baseUrl;
   }
