@@ -40,7 +40,7 @@ class AuthController {
   ];
   Rx<Role>? selectedRole;
 
-  login({
+  Future<bool> login({
     required String phone,
     required String password,
   }) async {
@@ -50,7 +50,14 @@ class AuthController {
     );
     if (user != null) {
       saveUser(user);
+      return true;
     }
+    return false;
+  }
+
+  logout() {
+    user.value = null;
+    AppSettings.box?.delete('user');
   }
 
   signUp({
@@ -62,5 +69,18 @@ class AuthController {
   saveUser(User userMd) {
     user.value = userMd;
     AppSettings.box?.put('user', userMd.toJson());
+  }
+
+  String getUserNameLetters() {
+    String ss = '';
+    if (user.value != null) {
+      if (user.value!.name.isNotEmpty) {
+        ss = user.value!.name[0].toUpperCase();
+      }
+      if (user.value!.surname.isNotEmpty) {
+        ss += user.value!.surname[0].toUpperCase();
+      }
+    }
+    return ss;
   }
 }

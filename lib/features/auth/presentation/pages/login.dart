@@ -56,10 +56,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   post() async {
     if (formKey.currentState?.validate() ?? false) {
-      await authController.login(
+      bool res = await authController.login(
         phone: phoneCtrl.text,
         password: passwordCtrl.text,
       );
+      if (mounted && res) {
+        Navigator.of(context).pop();
+      }
     }
   }
 

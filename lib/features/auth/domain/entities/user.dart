@@ -5,6 +5,7 @@ class User {
   final String name;
   final String surname;
   final String phone;
+  final String trimmedPhone;
   final String email;
   final String password;
   final String token;
@@ -15,6 +16,7 @@ class User {
     required this.name,
     required this.surname,
     required this.phone,
+    required this.trimmedPhone,
     required this.email,
     required this.password,
     required this.token,
@@ -27,6 +29,7 @@ class User {
     String? name,
     String? surname,
     String? phone,
+    String? trimmedPhone,
     String? email,
     String? password,
     String? token,
@@ -38,6 +41,7 @@ class User {
       name: name ?? this.name,
       surname: surname ?? this.surname,
       phone: phone ?? this.phone,
+      trimmedPhone: trimmedPhone ?? this.phone,
       email: email ?? this.email,
       password: password ?? this.password,
       token: token ?? this.token,
@@ -53,6 +57,7 @@ class User {
     result.addAll({'name': name});
     result.addAll({'surname': surname});
     result.addAll({'phone': phone});
+    result.addAll({'trimmedPhone': trimmedPhone});
     result.addAll({'email': email});
     result.addAll({'password': password});
     result.addAll({'token': token});
@@ -63,11 +68,23 @@ class User {
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
+    String phone = map['phone'] ?? '';
+    String trimmedPhone = map['trimmedPhone'] ?? '';
+    if (trimmedPhone.isEmpty && phone.isNotEmpty) {
+      if (phone.startsWith('993')) {
+        trimmedPhone = '+$phone';
+      } else if (phone.startsWith('+993')) {
+        trimmedPhone = phone;
+      } else {
+        trimmedPhone = '+993$phone';
+      }
+    }
     return User(
       id: map['id']?.toInt() ?? 0,
       name: map['name'] ?? '',
       surname: map['surname'] ?? '',
-      phone: map['phone'] ?? '',
+      phone: phone,
+      trimmedPhone: trimmedPhone,
       email: map['email'] ?? '',
       password: map['password'] ?? '',
       token: map['token'] ?? '',

@@ -17,7 +17,7 @@ class DropdownBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 48,
+      height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.sBorder),
         border: Border.all(

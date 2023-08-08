@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     // );
 
     return Scaffold(
-      drawer: const HomeDrawer(),
+      drawer: HomeDrawer(),
       appBar: AppBar(
         title: const Text("Homies"),
       ),
